@@ -2,7 +2,8 @@
 semaphore_user: semaphore
 semaphore_version: "2.9.112"
 semaphore_checksum: "bb45b2e84e2d71fa8ffa2d7dd7990219da58f7a50ee7bf7ce428d9523413d93a"
-semaphore_download_url: "https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_amd64.tar.gz"
+semaphore_download_url: >
+  https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_amd64.tar.gz
 
 semaphore_path: "/opt/semaphore"
 semaphore_config_path: "/etc/semaphore/semaphore.json"
