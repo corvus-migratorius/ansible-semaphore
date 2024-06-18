@@ -13,3 +13,4 @@
       db_name: semaphore
       admin_user_path: "secrets/admin.yaml"
       db_secrets_dir: "secrets/db/"
+      inventory_name: "semaphore"
