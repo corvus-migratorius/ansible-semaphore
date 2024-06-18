@@ -1,4 +1,109 @@
 ---
-- name: "Mock task"
-  ansible.builtin.debug:
-    msg: "hello, world!"
+- name: "Include admin user definition"
+  ansible.builtin.include_vars:
+    file: "{{ admin_user_path }}"
+
+- name: "Get db credentials"
+  ansible.builtin.set_fact:
+    pg_username: "{{ lookup('ansible.builtin.file', db_secrets_dir + '/user-name.txt') }}"
+    pg_password: "{{ lookup('ansible.builtin.file', db_secrets_dir + '/user-password.txt') }}"
+
+- name: "Install dependencies"
+  loop:
+    - git
+    - python3-pip
+  ansible.builtin.package:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+
+- name: "Install Ansible"
+  ansible.builtin.pip:
+    name: ansible
+    state: present
+
+- name: "Create a system user for running Semaphore"
+  ansible.builtin.user:
+    name: "{{ semaphore_user }}"
+    system: true
+
+- name: "Create application directories"
+  loop:
+    - "{{ semaphore_path }}"
+    - "{{ semaphore_config_path | dirname }}"
+    - "{{ semaphore_tmp_path }}"
+    - "{{ semaphore_version_dir }}"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ semaphore_user }}"
+    group: "{{ semaphore_user }}"
+    mode: "0755"
+
+- name: "Download the release"
+  ansible.builtin.get_url:
+    url: "{{ semaphore_download_url }}"
+    checksum: "{{ semaphore_download_checksum | default(omit) }}"
+    dest: "{{ semaphore_version_dir }}.tar.gz"
+    owner: "{{ semaphore_user }}"
+    mode: "0644"
+
+- name: "Extract the release"
+  ansible.builtin.unarchive:
+    src: "{{ semaphore_version_dir }}.tar.gz"
+    dest: "{{ semaphore_version_dir }}"
+    remote_src: true
+    creates: "{{ semaphore_version_dir }}/semaphore"
+    owner: "{{ semaphore_user }}"
+    group: "{{ semaphore_user }}"
+
+- name: "Create current symlink"
+  notify: Semaphore restart
+  ansible.builtin.file:
+    src: "{{ semaphore_version_dir }}/semaphore"
+    dest: "{{ semaphore_executable }}"
+    state: "link"
+
+- name: "Template Semaphore configuration file"
+  notify: Semaphore restart
+  ansible.builtin.template:
+    src: semaphore.json.j2
+    dest: "{{ semaphore_config_path }}"
+    owner: "{{ semaphore_user }}"
+    group: "{{ semaphore_user }}"
+    mode: "0660"
+
+- name: "Perform database migrations"
+  notify: Semaphore restart
+  register: semaphore_migrations
+  changed_when: "'Executing migration' in semaphore_migrations.stdout"
+  ansible.builtin.command: "{{ semaphore_command }} migrate"
+
+- name: "Check users"
+  register: semaphore_user_list
+  changed_when: false
+  ansible.builtin.command: "{{ semaphore_command }} user list"
+
+- name: "Create the admin user"
+  when: "admin_user.login not in semaphore_user_list.stdout"
+  changed_when: true
+  ansible.builtin.command: >
+    {{ semaphore_command }} user add
+    --admin
+    --name {{ admin_user.name | quote }}
+    --login {{ admin_user.login | quote }}
+    --email {{ admin_user.email | quote }}
+    --password {{ admin_user.password | quote }}
+
+- name: "Deploy systemd service file"
+  notify: Semaphore restart
+  ansible.builtin.template:
+    src: "semaphore.service.j2"
+    dest: "{{ semaphore_systemd_unit_path }}"
+    mode: "0644"
+
+- name: "Enable and start the service"
+  ansible.builtin.systemd:
+    name: "{{ semaphore_identifier }}"
+    state: "started"
+    enabled: true

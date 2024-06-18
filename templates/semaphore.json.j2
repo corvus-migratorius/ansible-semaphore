@@ -1,0 +1,55 @@
+{
+    "bolt": {
+      "host": ""
+    },
+    "mysql": {
+      "host": "",
+      "user": "",
+      "pass": "",
+      "name": "",
+      "options": {}
+    },
+    "postgres": {
+      "host": "{{ db_host }}",
+      "user": "{{ pg_username }}",
+      "pass": "{{ pg_password }}",
+      "name": "{{ db_name }}",
+      "options": {
+        "sslmode": "disable"
+      }
+    },
+    "dialect": "postgres",
+    "port": "{{ semaphore_port }}",
+    "interface": "",
+    "tmp_path": "/tmp/semaphore",
+    "cookie_hash": "{{ config_secrets.cookie_hash }}",
+    "cookie_encryption": "{{ config_secrets.cookie_encryption }}",
+    "access_key_encryption": "{{ config_secrets.access_key_encryption }}",
+    "email_sender": "",
+    "email_host": "",
+    "email_port": "",
+    "web_host": "",
+    "ldap_binddn": "",
+    "ldap_bindpassword": "",
+    "ldap_server": "",
+    "ldap_searchdn": "",
+    "ldap_searchfilter": "",
+    "ldap_mappings": {
+      "dn": "",
+      "mail": "",
+      "uid": "",
+      "cn": ""
+    },
+    "telegram_chat": "{{ telegram_chat_id }}",
+    "telegram_token": "{{ telegram_token }}",
+    "concurrency_mode": "{{ concurrency_mode }}",
+    "max_parallel_tasks": {{ max_parallel_tasks }},
+    "email_alert": {{ alerts_email | to_json }},
+    "telegram_alert": {{ alerts_telegram | to_json }},
+    "slack_alert": {{ alerts_slack | to_json }},
+    "slack_url": "{{ slack_url }}",
+    "rocketchat_alert": false,
+    "rocketchat_url": "",
+    "ldap_enable": {{ enable_ldap | to_json }},
+    "ldap_needtls": false
+  }

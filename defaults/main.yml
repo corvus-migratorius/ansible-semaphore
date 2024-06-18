@@ -1,1 +1,37 @@
 ---
+semaphore_user: semaphore
+semaphore_version: "2.9.112"
+semaphore_checksum: "bb45b2e84e2d71fa8ffa2d7dd7990219da58f7a50ee7bf7ce428d9523413d93a"
+semaphore_download_url: >
+  https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_amd64.tar.gz
+
+semaphore_path: "/opt/semaphore"
+semaphore_config_path: "/etc/semaphore/semaphore.json"
+semaphore_secrets_path: "/etc/semaphore/semaphore.secrets.json"
+semaphore_tmp_path: "{{ semaphore_path }}/tmp"
+semaphore_executable: "{{ semaphore_path }}/semaphore"
+semaphore_version_dir: "{{ semaphore_executable }}_{{ semaphore_version }}"
+semaphore_identifier: "{{ semaphore_user }}"
+semaphore_systemd_unit_path: "/etc/systemd/system/{{ semaphore_identifier }}.service"
+
+semaphore_command: "{{ semaphore_executable }} --config {{ semaphore_config_path | quote }}"
+
+semaphore_port: 3030
+
+config_secrets:
+  cookie_hash: "{{ lookup('ansible.builtin.password', '/dev/null length=32', seed=inventory_hostname) | b64encode }}"
+  cookie_encryption: "{{ lookup('ansible.builtin.password', '/dev/null length=32', seed=inventory_hostname) | b64encode }}"
+  access_key_encryption: "{{ lookup('ansible.builtin.password', '/dev/null length=32', seed=inventory_hostname) | b64encode }}"
+
+db_host: localhost
+db_port: 5432
+
+telegram_chat_id: ""
+telegram_token: ""
+concurrency_mode: ""
+max_parallel_tasks: 0
+alerts_email: false
+alerts_telegram: false
+alerts_slack: false
+slack_url: ""
+enable_ldap: false
