@@ -1,5 +1,5 @@
 ---
-- name: "Include user definitions"
+- name: "Include admin user definition"
   ansible.builtin.include_vars:
     file: "{{ admin_user_path }}"
 
@@ -57,7 +57,7 @@
     owner: "{{ semaphore_user }}"
     group: "{{ semaphore_user }}"
 
-- name: Create current symlink
+- name: "Create current symlink"
   notify: Semaphore restart
   ansible.builtin.file:
     src: "{{ semaphore_version_dir }}/semaphore"
@@ -83,14 +83,6 @@
   register: semaphore_user_list
   changed_when: false
   ansible.builtin.command: "{{ semaphore_command }} user list"
-
-# - name: "Debug users"
-#   ansible.builtin.debug:
-#     var: semaphore_user_list
-
-# - name: "Debug admin"
-#   ansible.builtin.debug:
-#     var: admin_user
 
 - name: "Create the admin user"
   when: "admin_user.login not in semaphore_user_list.stdout"
