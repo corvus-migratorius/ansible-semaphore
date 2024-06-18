@@ -27,8 +27,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install test dependencies.
+      - name: Install CI dependencies.
         run: pip3 install -r requirements.ci.txt
+
+      - name: Install role dependencies.
+        run: ansible-galaxy install -r requirements.yaml
 
       - name: Run Molecule tests.
         run: molecule test
