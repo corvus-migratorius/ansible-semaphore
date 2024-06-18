@@ -40,6 +40,3 @@
           password: "{{ admin_user.password }}"
         return_content: true
         status_code: [ 204 ]
-
-    - debug:
-        var: login
