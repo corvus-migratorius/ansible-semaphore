@@ -2,4 +2,14 @@
 - name: Converge
   hosts: all
   roles:
-    - role: genlab.template
+    - role: genlab.docker_ubuntu
+
+    - role: genlab.postgresql_docker
+      secrets_dir: "secrets/db"
+      project_name: semaphore
+
+    - role: genlab.semaphore
+      db_host: localhost
+      db_name: semaphore
+      admin_user_path: "secrets/admin.yaml"
+      db_secrets_dir: "secrets/db/"
