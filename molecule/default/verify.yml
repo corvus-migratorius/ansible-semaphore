@@ -5,7 +5,41 @@
   any_errors_fatal: true
 
   tasks:
-    - name: "Mock verification task"
-      changed_when: false
-      ansible.builtin.command:
-        cmd: "true"
+    - name: "Include default vars"
+      ansible.builtin.include_vars:
+        dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/"
+        extensions: [ 'yml' ]
+
+    - name: "Sanity check Semaphore server"
+      retries: 5
+      delay: 1
+      register: this
+      failed_when: "this.content != 'pong'"
+      ansible.builtin.uri:
+        method: "GET"
+        url: "http://localhost:{{ semaphore_port }}/api/ping"
+        return_content: true
+        status_code: [ 200 ]
+
+    - name: "Include admin user definition"
+      ansible.builtin.include_vars:
+        file: "secrets/admin.yaml"
+
+    - name: "Log in with admin user"
+      register: this
+      failed_when: "'OK' not in this.msg"
+      ansible.builtin.uri:
+        method: "POST"
+        url: "http://localhost:{{ semaphore_port }}/api/auth/login"
+        headers:
+          accept: "application/json"
+          Content-Type: "application/json"
+        body_format: "json"
+        body:
+          auth: "{{ admin_user.login }}"
+          password: "{{ admin_user.password }}"
+        return_content: true
+        status_code: [ 204 ]
+
+    - debug:
+        var: login
