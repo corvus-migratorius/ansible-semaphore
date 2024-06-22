@@ -4,3 +4,6 @@
 
 - name: genlab.postgresql_docker
   src: https://github.com/corvus-migratorius/ansible-postgresql-docker.git
+
+- name: ara_api
+  src: https://github.com/doumor/ara-collection.git

@@ -1,6 +1,8 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    ara_api_wsgi_server: gunicorn
   roles:
     - role: genlab.docker_ubuntu
 
@@ -13,3 +15,5 @@
       db_name: semaphore
       admin_user_path: "secrets/admin.yaml"
       db_secrets_dir: "secrets/db/"
+
+    - role: ara_api
