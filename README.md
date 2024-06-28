@@ -1,7 +1,7 @@
-template
+ansible-semaphore
 =========
 
-Template for Ansible role monorepos
+Role for deploying Ansible Semaphore UI as a systemd unit.
 
 Requirements
 ------------
@@ -23,7 +23,7 @@ Example Playbook
 
 ```yaml
 roles:
-    - role: genlab.template
+    - role: genlab.semaphore
 ```
 
 License

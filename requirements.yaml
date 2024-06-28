@@ -1,0 +1,6 @@
+---
+- name: genlab.docker_ubuntu
+  src: https://github.com/corvus-migratorius/ansible-docker-ubuntu.git
+
+- name: genlab.postgresql_docker
+  src: https://github.com/corvus-migratorius/ansible-postgresql-docker.git
