@@ -29,9 +29,9 @@
 
 - name: "Create application directories"
   loop:
-    - "{{ semaphore_path }}"
+    - "{{ semaphore_distrib_path }}"
     - "{{ semaphore_config_path | dirname }}"
-    - "{{ semaphore_tmp_path }}"
+    - "{{ projects_dir }}"
     - "{{ semaphore_version_dir }}"
   ansible.builtin.file:
     path: "{{ item }}"

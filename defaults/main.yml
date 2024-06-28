@@ -5,11 +5,10 @@ semaphore_checksum: "bb45b2e84e2d71fa8ffa2d7dd7990219da58f7a50ee7bf7ce428d952341
 semaphore_download_url: >
   https://github.com/ansible-semaphore/semaphore/releases/download/v{{ semaphore_version }}/semaphore_{{ semaphore_version }}_linux_amd64.tar.gz
 
-semaphore_path: "/opt/semaphore"
+semaphore_distrib_path: "/opt/semaphore"
 semaphore_config_path: "/etc/semaphore/semaphore.json"
 semaphore_secrets_path: "/etc/semaphore/semaphore.secrets.json"
-semaphore_tmp_path: "{{ semaphore_path }}/tmp"
-semaphore_executable: "{{ semaphore_path }}/semaphore"
+semaphore_executable: "{{ semaphore_distrib_path }}/semaphore"
 semaphore_version_dir: "{{ semaphore_executable }}_{{ semaphore_version }}"
 semaphore_identifier: "{{ semaphore_user }}"
 semaphore_systemd_unit_path: "/etc/systemd/system/{{ semaphore_identifier }}.service"
@@ -17,6 +16,8 @@ semaphore_systemd_unit_path: "/etc/systemd/system/{{ semaphore_identifier }}.ser
 semaphore_command: "{{ semaphore_executable }} --config {{ semaphore_config_path | quote }}"
 
 semaphore_port: 3030
+
+projects_dir: "/tmp/semaphore"
 
 config_secrets:
   cookie_hash: "{{ lookup('ansible.builtin.password', '/dev/null length=32', seed=inventory_hostname) | b64encode }}"

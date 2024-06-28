@@ -21,7 +21,7 @@
     "dialect": "postgres",
     "port": "{{ semaphore_port }}",
     "interface": "",
-    "tmp_path": "/tmp/semaphore",
+    "tmp_path": "{{ projects_dir }}",
     "cookie_hash": "{{ config_secrets.cookie_hash }}",
     "cookie_encryption": "{{ config_secrets.cookie_encryption }}",
     "access_key_encryption": "{{ config_secrets.access_key_encryption }}",

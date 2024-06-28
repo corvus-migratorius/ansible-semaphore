@@ -7,7 +7,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-WorkingDirectory={{ semaphore_path }}
+WorkingDirectory={{ semaphore_distrib_path }}
 ExecStart={{ semaphore_command }} server
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
