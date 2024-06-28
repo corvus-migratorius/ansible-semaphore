@@ -38,7 +38,7 @@
     state: directory
     owner: "{{ semaphore_user }}"
     group: "{{ semaphore_user }}"
-    mode: "0755"
+    mode: "0700"
 
 - name: "Download the release"
   ansible.builtin.get_url:
