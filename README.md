@@ -1,7 +1,7 @@
 ansible-semaphore
 =========
 
-Role for deploying Ansible Semaphore UI
+Role for deploying Ansible Semaphore UI as a systemd unit.
 
 Requirements
 ------------
